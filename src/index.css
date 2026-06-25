@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", sans-serif;
+  --font-serif: "Lora", serif;
+  --font-kalam: "Kalam", cursive;
+}
+
+.client-carousel-track {
+  --visible-items: 2;
+}
+
+@media (min-width: 768px) {
+  .client-carousel-track {
+    --visible-items: 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .client-carousel-track {
+    --visible-items: 6;
+  }
+}
+
