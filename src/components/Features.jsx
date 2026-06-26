@@ -91,23 +91,20 @@ const Features = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative border border-white/30 rounded-sm p-8 text-center flex flex-col items-center gap-4 transition-all duration-500 ease-out cursor-default overflow-hidden"
+              className="group border border-white/30 rounded-sm p-8 text-center flex flex-col items-center gap-4 bg-transparent hover:bg-[#D9118A] transition-colors duration-200 ease-out cursor-default"
             >
-              {/* Pink fill on hover — positioned as absolute background */}
-              <div className="absolute inset-0 bg-[#D9118A] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-out origin-bottom z-0" />
-
               {/* Icon */}
-              <div className="relative z-10 text-white opacity-90">
+              <div className="text-white opacity-90">
                 {feature.icon}
               </div>
 
               {/* Title */}
-              <h3 className="relative z-10 text-white text-lg font-bold leading-snug">
+              <h3 className="text-white text-lg font-bold leading-snug">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="relative z-10 text-white/80 group-hover:text-white text-sm leading-relaxed transition-colors duration-300">
+              <p className="text-white/80 group-hover:text-white text-sm leading-relaxed transition-colors duration-200">
                 {feature.description}
               </p>
             </div>

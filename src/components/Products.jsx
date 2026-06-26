@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import img1 from '../assets/products/1.webp';
 import img2 from '../assets/products/2.webp';
 import img3 from '../assets/products/3.webp';
@@ -10,6 +10,72 @@ import img8 from '../assets/products/8.webp';
 import img9 from '../assets/products/9.webp';
 import img10 from '../assets/products/10.webp';
 import img11 from '../assets/products/11.webp';
+
+// Individual Product Item Component with scroll-reveal effect
+const ProductItem = ({ product }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const domRef = useRef();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.unobserve(domRef.current); // Only animate once
+          }
+        });
+      },
+      { threshold: 0.1 } // Trigger when 10% of the element is visible
+    );
+
+    if (domRef.current) {
+      observer.observe(domRef.current);
+    }
+
+    return () => {
+      if (domRef.current) {
+        observer.unobserve(domRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={domRef}
+      className={`group relative w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[450px] overflow-hidden cursor-pointer border-b border-white/5 transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24'
+      }`}
+    >
+      {/* Image Container with hidden overflow */}
+      <div className="w-full h-full overflow-hidden">
+        <img
+          src={product.img}
+          alt={product.name}
+          className={`w-full h-full object-cover transition-all duration-[1500ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isVisible ? 'scale-100 translate-y-0' : 'scale-110 translate-y-16'
+          } group-hover:scale-105`}
+        />
+      </div>
+
+      {/* Dark Overlay Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+
+      {/* Info Overlay (Positioned bottom-left) */}
+      <div className="absolute bottom-8 left-6 md:left-12 z-20 flex flex-col items-start select-none">
+        <h3 className="text-white text-lg sm:text-2xl md:text-3xl font-bold tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-transform duration-700 ease-out group-hover:-translate-y-3">
+          {product.name}
+        </h3>
+        <a
+          href="#contact"
+          className="mt-2 bg-[#D9118A] hover:bg-[#b80e72] text-white font-semibold text-xs uppercase tracking-wider px-5 py-2.5 transition-all duration-700 ease-out transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+        >
+          View Details
+        </a>
+      </div>
+    </div>
+  );
+};
 
 const Products = () => {
   const productsList = [
@@ -40,38 +106,9 @@ const Products = () => {
       {/* Full-width Product Rows */}
       <div className="flex flex-col w-full">
         {productsList.map((product, index) => (
-          <div 
-            key={index}
-            className="group relative w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[450px] overflow-hidden cursor-pointer border-b border-white/5"
-          >
-            {/* Image Container with hidden overflow */}
-            <div className="w-full h-full overflow-hidden">
-              <img 
-                src={product.img} 
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-105"
-              />
-            </div>
-            
-            {/* Dark Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
-            
-            {/* Info Overlay (Positioned bottom-left) */}
-            <div className="absolute bottom-8 left-6 md:left-12 z-20 flex flex-col items-start select-none">
-              <h3 className="text-white text-lg sm:text-2xl md:text-3xl font-bold tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-transform duration-700 ease-out group-hover:-translate-y-3">
-                {product.name}
-              </h3>
-              <a 
-                href="#contact"
-                className="mt-2 bg-[#D9118A] hover:bg-[#b80e72] text-white font-semibold text-xs uppercase tracking-wider px-5 py-2.5 transition-all duration-700 ease-out transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-              >
-                View Details
-              </a>
-            </div>
-          </div>
+          <ProductItem key={index} product={product} />
         ))}
       </div>
-
     </section>
   );
 };
