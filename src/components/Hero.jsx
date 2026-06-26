@@ -63,11 +63,23 @@ const Hero = () => {
   // Auto-advance carousel slides
   useEffect(() => {
     const timer = setInterval(() => {
+      if (document.hidden) return; // Pause carousel if page is in background to prevent out-of-bounds errors
       setIsTransitioning(true);
-      setCurrentIndex((prev) => prev + 1); // safe increment
+      setCurrentIndex((prev) => prev + 1);
     }, 5000);
     return () => clearInterval(timer);
   }, [slides.length]);
+
+  // Safety guard to prevent going out of bounds (e.g. if transition events are missed/throttled)
+  useEffect(() => {
+    if (currentIndex >= extendedSlides.length) {
+      setIsTransitioning(false);
+      setCurrentIndex(1);
+    } else if (currentIndex < 0) {
+      setIsTransitioning(false);
+      setCurrentIndex(slides.length);
+    }
+  }, [currentIndex, extendedSlides.length, slides.length]);
 
   // Handle wrap-around transitions seamlessly
   const handleTransitionEnd = () => {
@@ -96,7 +108,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative h-[85vh] w-full overflow-hidden bg-zinc-950 font-sans">
+    <div className="relative h-[42.5vh] sm:h-[85vh] w-full overflow-hidden bg-zinc-950 font-sans">
       {/* Slides Container */}
       <div
         className={`absolute inset-0 flex ${
